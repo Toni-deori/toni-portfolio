@@ -91,7 +91,6 @@ const LightRays = ({
     if (!isVisible || !containerRef.current) return;
 
     if (!supportsWebGL()) {
-      // If no WebGL support, don't initialize the effect
       return;
     }
 
@@ -107,7 +106,6 @@ const LightRays = ({
 
       if (!containerRef.current) return;
 
-      // Detect mobile user agent
       const isMobile = /Mobi|Android/i.test(navigator.userAgent);
       const clampedDpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
 
