@@ -30,6 +30,16 @@ const getAnchorAndDir = (origin, w, h) => {
   }
 };
 
+const supportsWebGL = () => {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+  } catch {
+    return false;
+  }
+};
+
 const LightRays = ({
   raysOrigin = 'top-center',
   raysColor = DEFAULT_COLOR,
@@ -80,6 +90,11 @@ const LightRays = ({
   useEffect(() => {
     if (!isVisible || !containerRef.current) return;
 
+    if (!supportsWebGL()) {
+      // If no WebGL support, don't initialize the effect
+      return;
+    }
+
     if (cleanupFunctionRef.current) {
       cleanupFunctionRef.current();
       cleanupFunctionRef.current = null;
@@ -92,8 +107,12 @@ const LightRays = ({
 
       if (!containerRef.current) return;
 
+      // Detect mobile user agent
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+      const clampedDpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+
       const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
+        dpr: clampedDpr,
         alpha: true
       });
       rendererRef.current = renderer;
@@ -238,7 +257,7 @@ void main() {
       const updatePlacement = () => {
         if (!containerRef.current || !renderer) return;
 
-        renderer.dpr = Math.min(window.devicePixelRatio, 2);
+        renderer.dpr = clampedDpr;
 
         const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
         renderer.setSize(wCSS, hCSS);
