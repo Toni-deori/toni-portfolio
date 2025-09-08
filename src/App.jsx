@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 
 import LightRays from './components/LightRays.jsx'
-import Hero from './sections/hero.jsx'
+import Hero from './sections/Hero.jsx'
 import Welcome from './sections/Welcome.jsx';
 import Navbar from './components/Navbar.jsx';
 import AnimCounter from './components/AnimCounter.jsx';
